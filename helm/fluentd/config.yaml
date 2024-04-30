@@ -1,0 +1,28 @@
+image:
+  repository: fluent/fluentd
+  tag: v1.11-debian-1
+  pullPolicy: IfNotPresent
+
+resources:
+  limits:
+    memory: 400Mi
+  requests:
+    cpu: 100m
+    memory: 200Mi
+
+backend:
+  type: elasticsearch
+  elasticsearch:
+    host: elasticsearch.logging
+    port: 9200
+    scheme: http
+    logstashPrefix: fluentd
+
+extraEnv:
+  - name: FLUENT_ELASTICSEARCH_USER
+    value: elastic
+  - name: FLUENT_ELASTICSEARCH_PASSWORD
+    valueFrom:
+      secretKeyRef:
+        name: elasticsearch-password
+        key: password

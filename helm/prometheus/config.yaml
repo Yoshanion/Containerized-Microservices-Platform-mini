@@ -1,0 +1,26 @@
+alertmanager:
+  enabled: true
+
+server:
+  persistentVolume:
+    enabled: true
+    size: 20Gi  # Size of the persistent volume
+
+  retention: "10d"  # Data retention period
+
+  resources:
+    limits:
+      cpu: "500m"
+      memory: "2Gi"
+    requests:
+      cpu: "500m"
+      memory: "2Gi"
+
+  alerting:
+    alertmanagers:
+      - namespace: monitoring
+        name: alertmanager
+        port: http
+
+pushgateway:
+  enabled: false

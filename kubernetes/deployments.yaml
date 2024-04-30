@@ -1,0 +1,87 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: service1-deploymebt
+spec:
+  selector:
+    matchLabels:
+      app: service1
+  template:
+    metadata:
+      labels:
+        app: service1
+    spec:
+      containers:
+      - name: service1
+        image: yoshanion/service1:latest
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 80
+        env:
+          - name: DATABASE_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: db-password
+                key: password
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: service1-service
+spec:
+  type: ClusterIP
+  selector:
+    app: service1
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 80
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: service2-deploymebt
+spec:
+  selector:
+    matchLabels:
+      app: service2
+  template:
+    metadata:
+      labels:
+        app: service2
+    spec:
+      containers:
+      - name: service2
+        image: yoshanion/service2:latest
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 80
+        env:
+          - name: DATABASE_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: db-password
+                key: password
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: service2-service
+spec:
+  type: ClusterIP
+  selector:
+    app: service2
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 80
